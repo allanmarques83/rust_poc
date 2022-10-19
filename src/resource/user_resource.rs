@@ -24,11 +24,20 @@ const USER_HTML_PREFIX: &str = r#"
 const USER_HTML_SUFFIX: &str = r#"</body></html>"#;
 
 #[get("/users/<uuid>")]
-pub async fn get_user(mut db: Connection<DBConnection>,uuid: &str) -> HtmlResponse {
+pub async fn get_user(
+    mut db: Connection<DBConnection>,
+    uuid: &str,
+    flash: Option<FlashMessage<'_>>,
+) -> HtmlResponse {
     let connection = db.acquire().await.map_err(|_| Status::InternalServerError)?;
     let user = User::find(connection, uuid).await.map_err(|_| Status::NotFound)?;
     
     let mut html_string = String::from(USER_HTML_PREFIX);
+
+    if flash.is_some() {
+        html_string.push_str(flash.unwrap().message());
+    }
+
     html_string.push_str(&user.to_html_string());
     html_string.push_str(format!(r#"<a href="/users/edit/{}">Edit User</a>"#,user.uuid).as_ref());
     html_string.push_str(r#"<a href="/users">UserList</a>"#);

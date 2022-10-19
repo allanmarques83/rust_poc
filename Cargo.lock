@@ -1498,6 +1498,7 @@ dependencies = [
  "rand_core",
  "rocket",
  "rocket_db_pools",
+ "serde",
  "sqlx",
  "uuid",
 ]

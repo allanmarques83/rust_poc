@@ -5,7 +5,6 @@ use uuid::Uuid;
 use crate::enums::user_status::UserStatus;
 use crate::util::date_custom::DateCustom;
 
-
 #[derive(Debug, FromRow, FromForm)]
 pub struct User {
     pub uuid: Uuid,
